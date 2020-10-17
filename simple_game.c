@@ -19,7 +19,7 @@ int main(void)
     const int screenHeight = DEFAULT_SCREEN_HEIGHT;
 
     InitWindow(screenWidth, screenHeight, GAME_TITLE);
-    SetTargetFPS(60);            
+    SetTargetFPS(1000);            
 
     for (char i = 0; i < MAX_PLAYERS; PlayerInit(i), i++);
 
@@ -30,6 +30,7 @@ int main(void)
 
         BeginDrawing();
         ClearBackground(BLACK);
+        DrawFPS(0,0);
 
         for (char i = 0; i < MAX_PLAYERS; PlayerDraw(i), i++);
         
