@@ -1,0 +1,9 @@
+# Ignore this files
+simple_game
+simple_game.o
+
+# Windows Files
+Thumbs.db
+
+# MacOSX Files
+.DS_Store
