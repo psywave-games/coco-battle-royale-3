@@ -12,18 +12,19 @@
 #define WORD_LIMIT_X                    (DEFAULT_SCREEN_WIDTH-PLAYER_SIZE-1)
 #define WORD_LIMIT_Y                    (DEFAULT_SCREEN_HEIGHT-PLAYER_SIZE-1)
 #define PointDistance2D(x1,y1,x2,y2)    sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)))
-#define BOOL_SIGN(sign)                 (sign?-1:1) 
+#define BOOL_SIGN(sign)                 (sign?1:-1) 
 #define UNIX_TIME                       time(NULL)
 #define SIDE_LEFT                       false
 #define SIDE_RIGHT                      true
 
-void InputStep();
-int InputAxisX();
-int InputAxisY();
-bool inputAttack();
+void InputStep(void);
+int InputAxisX(void);
+int InputAxisY(void);
+bool inputAttack(void);
 
 void PlayerInit(char player_id);
 void PlayerDraw(char player_id);
 void PlayerStep(char player_id);
+void PlayerMediatorStep(void);
 char PlayerNear(char not_player_id, float x, float y);
 float PlayerDistance(char player_a, char player_b);

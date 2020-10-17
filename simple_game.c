@@ -21,9 +21,9 @@ int main(void)
     InitWindow(screenWidth, screenHeight, GAME_TITLE);
     SetTargetFPS(1000);            
 
-
     while (!WindowShouldClose()) 
     {
+        /// PREPARE GAME
         static bool pause = false;
         static bool reset = true;
         
@@ -36,6 +36,7 @@ int main(void)
 
         // PRE-STEP GAME
         InputStep();
+        PlayerMediatorStep();
 
         // STEP GAME
         if (!pause) {
