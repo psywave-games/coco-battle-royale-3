@@ -3,6 +3,7 @@
 #define DEFAULT_SCREEN_WIDTH            (800)
 #define DEFAULT_SCREEN_HEIGHT           (600)
 #define MAX_PLAYERS                     (32)
+#define PLAYER_ATTACK_TIME              (1)
 #define PLAYER_ANY                      (-1)
 #define PLAYER_AWAY                     (3)
 #define PLAYER_SIZE                     (32)
@@ -11,10 +12,12 @@
 #define WORD_LIMIT_X                    (DEFAULT_SCREEN_WIDTH-PLAYER_SIZE-1)
 #define WORD_LIMIT_Y                    (DEFAULT_SCREEN_HEIGHT-PLAYER_SIZE-1)
 #define PointDistance2D(x1,y1,x2,y2)    sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)))
+#define UNIX_TIME                       time(NULL)
 
 void InputStep();
 int InputAxisX();
 int InputAxisY();
+bool inputAttack();
 
 void PlayerInit(char player_id);
 void PlayerDraw(char player_id);

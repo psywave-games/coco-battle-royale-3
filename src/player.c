@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include <raymath.h>
+#include <time.h>
 #include "header.h"
 
 enum {
@@ -15,8 +16,8 @@ static struct player_t {
     float hspeed;
     float vspeed;
     unsigned char state;
+    time_t last_attack;
 }   player[MAX_PLAYERS];
-
 
 
 void PlayerInit(char player_id)
@@ -67,11 +68,31 @@ void PlayerStep(char player_id)
         axis_y = InputAxisY();
     }
 
-    // player movement
-    player[player_id].hspeed = Lerp(player[player_id].hspeed, PLAYER_MAX_SPEED * axis_x, PLAYER_INC_SPEED);
-    player[player_id].vspeed = Lerp(player[player_id].vspeed, PLAYER_MAX_SPEED * axis_y, PLAYER_INC_SPEED);
-    player[player_id].x = Clamp(player[player_id].x + (player[player_id].hspeed * GetFrameTime()), 0, WORD_LIMIT_X);
-    player[player_id].y = Clamp(player[player_id].y + (player[player_id].vspeed * GetFrameTime()), 0, WORD_LIMIT_Y);
+    // FINITE STATE MACHINE PLAYER CONTROLL
+    if (player[player_id].state == fsm_player_died){
+        return;
+    }
+    else if (InputAttack() && player[player_id].last_attack + PLAYER_ATTACK_TIME < UNIX_TIME){
+        player[player_id].last_attack = UNIX_TIME;
+        player[player_id].state = fsm_player_atck;
+    }
+    else if (player[player_id].last_attack + PLAYER_ATTACK_TIME > UNIX_TIME) {
+        player[player_id].state = fsm_player_atck;
+    }
+    else if (axis_x != 0 || axis_y != 0) {
+        player[player_id].state = fsm_player_walk;
+    }
+    else {
+        player[player_id].state = fsm_player_idle;
+    }
+
+    // MOVEMENT CHARACTER
+    if (player[player_id].state == fsm_player_walk) {
+        player[player_id].hspeed = Lerp(player[player_id].hspeed, PLAYER_MAX_SPEED * axis_x, PLAYER_INC_SPEED);
+        player[player_id].vspeed = Lerp(player[player_id].vspeed, PLAYER_MAX_SPEED * axis_y, PLAYER_INC_SPEED);
+        player[player_id].x = Clamp(player[player_id].x + (player[player_id].hspeed * GetFrameTime()), 0, WORD_LIMIT_X);
+        player[player_id].y = Clamp(player[player_id].y + (player[player_id].vspeed * GetFrameTime()), 0, WORD_LIMIT_Y);
+    }
 }
 
 
