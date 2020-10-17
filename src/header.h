@@ -11,6 +11,7 @@
 #define PLAYER_INC_SPEED                (0.96)
 #define WORD_LIMIT_X                    (DEFAULT_SCREEN_WIDTH-PLAYER_SIZE-1)
 #define WORD_LIMIT_Y                    (DEFAULT_SCREEN_HEIGHT-PLAYER_SIZE-1)
+#define irand(limit)                    GetRandomValue(0,limit)
 #define PointDistance2D(x1,y1,x2,y2)    sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)))
 #define BOOL_SIGN(sign)                 (sign?1:-1) 
 #define UNIX_TIME                       time(NULL)

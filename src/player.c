@@ -18,6 +18,7 @@ static struct player_t {
     bool sign;
     unsigned char state;
     time_t last_attack;
+    Color color;
 }   player[MAX_PLAYERS];
 
 
@@ -28,6 +29,7 @@ void PlayerInit(char player_id)
     bool near_player;
 
     player[player_id].state = fsm_player_idle;  
+    player[player_id].color = (Color) {irand(255), irand(255), irand(255), 255};
     player[player_id].hspeed = 0.0f;
     player[player_id].vspeed = 0.0f; 
 
@@ -39,8 +41,8 @@ void PlayerInit(char player_id)
     }
 
     do {
-        player[player_id].x = GetRandomValue(0, WORD_LIMIT_X);
-		player[player_id].y = GetRandomValue(0, WORD_LIMIT_Y);
+        player[player_id].x = irand(WORD_LIMIT_X);
+		player[player_id].y = irand(WORD_LIMIT_Y);
 
         player_near = PlayerNear(player_id, player[player_id].x, player[player_id].y);
 
@@ -52,6 +54,8 @@ void PlayerInit(char player_id)
 void PlayerDraw(char player_id)
 {
     Vector2 aux_v;
+    Color color_outline = player_id? player[player_id].color: WHITE;
+    Color color_inshape = player_id? WHITE: player[player_id].color;
     static signed char player_ancor_x = 8;
     static signed char player_ancor_y = 12;
     static signed char trinagle_primary_x1 = 5;
@@ -77,6 +81,9 @@ void PlayerDraw(char player_id)
 
     // PLAYER RENDER STATE 
     switch (player[player_id].state) {
+        case fsm_player_atck:
+            DrawCircleLines(player[player_id].x, player[player_id].y, PLAYER_SIZE, RED);
+
         case fsm_player_walk:
         case fsm_player_idle: {
             // Triangle Primary|Seecondary|Third Point A|B|C
@@ -110,11 +117,16 @@ void PlayerDraw(char player_id)
             Vector2 shp = {player[player_id].x + ((square_head_x  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + square_head_y - player_ancor_y};
             Vector2 shs = {3, 6};
 
-            /// Render
-            DrawTriangle(tppa, tppb, tppc, WHITE);
-            DrawTriangle(tspa, tspb, tspc, WHITE);
-            DrawTriangle(ttpa, ttpb, ttpc, WHITE);
-            DrawRectangleV(shp, shs, WHITE);
+            /// Render In Shape
+            DrawTriangle(tppa, tppb, tppc, color_inshape);
+            DrawTriangle(tspa, tspb, tspc, color_inshape);
+            DrawTriangle(ttpa, ttpb, ttpc, color_inshape);
+            DrawRectangleV(shp, shs, color_inshape);
+
+            DrawTriangleLines(tppa, tppb, tppc, color_outline);
+            DrawTriangleLines(tspa, tspb, tspc, color_outline);
+            DrawTriangleLines(ttpa, ttpb, ttpc, color_outline);
+            DrawRectangleLines(shp.x, shp.y, shs.x, shs.y, color_outline);
             break;
         }
     }
