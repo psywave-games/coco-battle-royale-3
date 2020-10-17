@@ -6,7 +6,7 @@ static signed char new_axis_x = 0;
 static signed char new_axis_y = 0;
 static bool new_attacking = false;
 
-void InputStep()
+void InputStep(void)
 {
     // movement
     new_axis_y = ((IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) - (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)));
@@ -16,17 +16,17 @@ void InputStep()
     new_attacking = IsKeyDown(KEY_SPACE);
 }
 
-bool InputAttack()
+bool InputAttack(void)
 {
     return (bool) new_attacking;
 }
 
-int InputAxisX()
+int InputAxisX(void)
 {
     return (int) new_axis_x;
 }
     
-int InputAxisY()
+int InputAxisY(void)
 {
     return (int) new_axis_y;
 }

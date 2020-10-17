@@ -130,6 +130,10 @@ void PlayerStep(char player_id)
         axis_x = InputAxisX();
         axis_y = InputAxisY();
         attack = InputAttack();
+    } else {
+        axis_x = BotAxisX(player_id);
+        axis_y = BotAxisY(player_id);
+        attack = BotAttack(player_id);
     }
 
     // FINITE STATE MACHINE PLAYER CONTROLL
@@ -159,7 +163,6 @@ void PlayerStep(char player_id)
         player[player_id].y = Clamp(player[player_id].y + (player[player_id].vspeed * GetFrameTime()), 0, WORD_LIMIT_Y);
     }
 }
-
 
 char PlayerNear(char not_player_id, float x, float y)
 {
@@ -193,7 +196,6 @@ float PlayerDistance(char player_a, char player_b)
     return PointDistance2D(player[player_a].x, player[player_a].y, player[player_b].x, player[player_b].y);
 }
 
-
 void PlayerMediatorStep(void)
 {
     for (char i = 0; i < MAX_PLAYERS; i++) {
@@ -213,4 +215,15 @@ void PlayerMediatorStep(void)
             }
         }
     }
+}
+
+bool PlayerDeath(char player_id)
+{
+    return player[player_id].state == fsm_player_died;
+}
+
+Vector2 PlayerPos(char player_id)
+{
+    Vector2 pos = {player[player_id].x, player[player_id].y};
+    return pos;
 }

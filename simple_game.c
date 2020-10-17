@@ -12,6 +12,7 @@
 #include "src/header.h"
 #include "src/input.c"
 #include "src/player.c"
+#include "src/ia_bot.c"
 
 int main(void)
 {
@@ -30,6 +31,7 @@ int main(void)
         // RESET GAME
         if (reset) {
             for (char i = 0; i < MAX_PLAYERS; PlayerInit(i), i++);
+            for (char i = 1; i < MAX_PLAYERS; BotIaInit(i), i++);
             pause = false;
             reset = false;
         }
@@ -37,6 +39,7 @@ int main(void)
         // PRE-STEP GAME
         InputStep();
         PlayerMediatorStep();
+        BotIaStep();
 
         // STEP GAME
         if (!pause) {

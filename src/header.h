@@ -17,14 +17,27 @@
 #define SIDE_LEFT                       false
 #define SIDE_RIGHT                      true
 
+// FILE: ia_bot.c
+void BotIaInit(char player_id);
+void BotIaStep(void);
+void BotIaChange(char player_id);
+void BotIaRetarget(char player_id);
+bool BotAttack(char player_id);
+int BotAxisX(char player_id);
+int BotAxisY(char player_id);
+
+// FILE: input.c
 void InputStep(void);
 int InputAxisX(void);
 int InputAxisY(void);
 bool inputAttack(void);
 
+// FILE: player.c
 void PlayerInit(char player_id);
 void PlayerDraw(char player_id);
 void PlayerStep(char player_id);
 void PlayerMediatorStep(void);
 char PlayerNear(char not_player_id, float x, float y);
 float PlayerDistance(char player_a, char player_b);
+bool PlayerDeath(char player_id);
+Vector2 PlayerPos(char player_id);
