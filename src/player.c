@@ -42,7 +42,7 @@ void PlayerInit(char player_id)
         player_near = PlayerNear(player_id, player[player_id].x, player[player_id].y);
 
         near_enemy = PlayerDistance(player_id, player_near)/PLAYER_SIZE < PLAYER_AWAY;
-        near_player = PlayerDistance(player_id, 0)/PLAYER_SIZE < (PLAYER_AWAY * 8);
+        near_player = PlayerDistance(player_id, 0)/PLAYER_SIZE < (PLAYER_AWAY * 2);
     } while (near_player || near_enemy);
 }
 
@@ -87,11 +87,11 @@ char PlayerNear(char not_player_id, float x, float y)
             continue;
         }
 
-        if (not_player_id != PLAYER_ANY && player_near == not_player_id){
+        if (player_near == not_player_id){
             continue;
         }
 
-        distance_new = PointDistance2DF(x, y, player[player_near].x, player[player_near].y);
+        distance_new = PointDistance2D(x, y, player[player_near].x, player[player_near].y);
 
         if (distance_new <= distance_old) {
             distance_old = distance_new;
@@ -104,5 +104,5 @@ char PlayerNear(char not_player_id, float x, float y)
 
 float PlayerDistance(char player_a, char player_b)
 {
-    return PointDistance2DF(player[player_a].x, player[player_a].y, player[player_b].x, player[player_b].y);
+    return PointDistance2D(player[player_a].x, player[player_a].y, player[player_b].x, player[player_b].y);
 }
