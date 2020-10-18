@@ -30,8 +30,8 @@ int main(void)
         
         // RESET GAME
         if (reset) {
-            for (char i = 0; i < MAX_PLAYERS; PlayerInit(i), i++);
-            for (char i = 1; i < MAX_PLAYERS; BotIaInit(i), i++);
+            for (player_t i = 0; i < MAX_PLAYERS; PlayerInit(i), i++);
+            for (player_t i = 1; i < MAX_PLAYERS; BotIaInit(i), i++);
             pause = false;
             reset = false;
         }
@@ -43,14 +43,14 @@ int main(void)
 
         // STEP GAME
         if (!pause) {
-            for (char i = 0; i < MAX_PLAYERS; PlayerStep(i), i++);
+            for (player_t i = 0; i < MAX_PLAYERS; PlayerStep(i), i++);
         }
 
         // DRAW GAME
         BeginDrawing();
         ClearBackground(BLACK);
         DrawFPS(10,0);
-        for (char i = 0; i < MAX_PLAYERS; PlayerDraw(i), i++);
+        for (player_t i = 0; i < MAX_PLAYERS; PlayerDraw(i), i++);
         if (pause){
             DrawText("PAUSED!", 10, 64, 32, WHITE);
         }

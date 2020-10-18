@@ -1,5 +1,5 @@
 #pragma once
-#define GAME_TITLE                  "Coco Battle Royale 2"
+#define GAME_TITLE                      "Coco Battle Royale 2"
 #define DEFAULT_SCREEN_WIDTH            (800)
 #define DEFAULT_SCREEN_HEIGHT           (600)
 #define MAX_PLAYERS                     (32)
@@ -18,14 +18,19 @@
 #define SIDE_LEFT                       false
 #define SIDE_RIGHT                      true
 
+typedef unsigned char player_t;
+typedef unsigned char state_t;
+typedef signed char axis_i_t;
+typedef bool axis_b_t;
+
 // FILE: ia_bot.c
-void BotIaInit(char player_id);
+void BotIaInit(player_t player_id);
 void BotIaStep(void);
-void BotIaChange(char player_id);
-void BotIaRetarget(char player_id);
-bool BotAttack(char player_id);
-int BotAxisX(char player_id);
-int BotAxisY(char player_id);
+void BotIaChange(player_t player_id);
+void BotIaRetarget(player_t player_id);
+bool BotAttack(player_t player_id);
+int BotAxisX(player_t player_id);
+int BotAxisY(player_t player_id);
 
 // FILE: input.c
 void InputStep(void);
@@ -34,11 +39,11 @@ int InputAxisY(void);
 bool inputAttack(void);
 
 // FILE: player.c
-void PlayerInit(char player_id);
-void PlayerDraw(char player_id);
-void PlayerStep(char player_id);
 void PlayerMediatorStep(void);
-char PlayerNear(char not_player_id, float x, float y);
-float PlayerDistance(char player_a, char player_b);
-bool PlayerDeath(char player_id);
-Vector2 PlayerPos(char player_id);
+void PlayerInit(player_t player_id);
+void PlayerDraw(player_t player_id);
+void PlayerStep(player_t player_id);
+bool PlayerDeath(player_t player_id);
+float PlayerDistance(player_t player_a, player_t player_b);
+player_t PlayerNear(player_t not_player_id, float x, float y);
+Vector2 PlayerPos(player_t player_id);

@@ -3,7 +3,8 @@
 #include <time.h>
 #include "header.h"
 
-static enum {
+enum {
+    fsm_ia_none,
     fsm_ia_winner,
     fsm_ia_hunter,
     fsm_ia_escape,
@@ -11,24 +12,27 @@ static enum {
     fsm_ia_sleep,
 };
 
-static struct ia_t {
+struct ia_s {
     bool attack;
-    unsigned char state;
-    unsigned char target; 
-    signed char input_x;
-    signed char input_y;
-}   bot[MAX_PLAYERS];
+    state_t state;
+    player_t target; 
+    axis_i_t input_x;
+    axis_i_t input_y;
+}   bot[(player_t) MAX_PLAYERS];
 
-void BotIaInit(char player_id)
+void BotIaInit(player_t player_id)
 {
     BotIaChange(player_id);
-    BotIaRetarget(player_id);
 }
 
 void BotIaStep(void)
 {
-    for (char player_id = 0; player_id < MAX_PLAYERS; player_id++)
+    for (player_t player_id = 0; player_id < MAX_PLAYERS; player_id++)
     {
+        if (PlayerDeath(player_id)){
+            bot[player_id].state = fsm_ia_none;
+        }
+
         switch (bot[player_id].state) {
             case fsm_ia_sleep:
                 if (GetRandomValue(0, 25) == 0){
@@ -40,23 +44,23 @@ void BotIaStep(void)
                 break;
 
             case fsm_ia_random:
-                if (GetRandomValue(0, 50) == 0) {
+                if (GetRandomValue(0, 100) == 0) {
                     bot[player_id].input_x = GetRandomValue(-1, 1);
                     bot[player_id].input_y = GetRandomValue(-1, 1);
                 } 
-                else if (GetRandomValue(0, 25) == 0){
+                else if (GetRandomValue(0, 50) == 0){
                     BotIaChange(player_id);
                 }  
                 break;
 
             case fsm_ia_hunter:
-                if (GetRandomValue(0, 200) == 0) {
+                if (PlayerDeath(bot[player_id].target)) {
                     BotIaRetarget(player_id);
-                } 
+                }
                 else if (PlayerDistance(bot[player_id].target, player_id) < PLAYER_SIZE) {
                     bot[player_id].attack = GetRandomValue(0, 3) == 0;
                 }
-                else if (PlayerDistance(bot[player_id].target, player_id) > (PLAYER_SIZE * 5)) {
+                else if (GetRandomValue(0, 15) == 0 && PlayerDistance(bot[player_id].target, player_id) > (PLAYER_SIZE * 5)) {
                     BotIaChange(player_id);
                 } 
                 else {
@@ -85,14 +89,16 @@ void BotIaStep(void)
     }
 }
 
-void BotIaRetarget(char player_id)
+void BotIaRetarget(player_t player_id)
 {
     Vector2 player_pos = PlayerPos(player_id);
     bot[player_id].target = PlayerNear(player_id, player_pos.x, player_pos.y);
+    bot[player_id].attack = false;
 }
 
-void BotIaChange(char player_id)
+void BotIaChange(player_t player_id)
 {
+    BotIaRetarget(player_id);
     switch (bot[player_id].state) {
         case fsm_ia_escape:
             bot[player_id].state = fsm_ia_random;
@@ -104,17 +110,17 @@ void BotIaChange(char player_id)
     }
 }
 
-bool BotAttack(char player_id)
+bool BotAttack(player_t player_id)
 {
-    return bot[player_id].state == fsm_ia_hunter? bot[player_id].attack: false;
+    return bot[player_id].attack;
 }
 
-int BotAxisX(char player_id)
+int BotAxisX(player_t player_id)
 {
     return (int) bot[player_id].input_x;
 }
 
-int BotAxisY(char player_id)
+int BotAxisY(player_t player_id)
 {
     return (int) bot[player_id].input_y;
 }
