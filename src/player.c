@@ -21,7 +21,6 @@ struct player_s {
     Color color;
 }   player[(player_t) MAX_PLAYERS];
 
-
 void PlayerInit(player_t player_id)
 {
     char player_near;
@@ -84,6 +83,8 @@ void PlayerDraw(player_t player_id)
     static signed char triangle_fourth_y3 = 4;
     static signed char square_head_x = 21;
     static signed char square_head_y = 0;
+    static signed char circle_eye_x = 23;
+    static signed char circle_eye_y = 2;
 
     // PLAYER RENDER STATE 
     switch (player[player_id].state) {
@@ -92,7 +93,7 @@ void PlayerDraw(player_t player_id)
 
         case fsm_player_walk:
         case fsm_player_idle: {
-            // Triangle Primary|Seecondary|Third Point A|B|C
+            // Triangle Primary|Seecondary|Third|Fourth Point A|B|C
             Vector2 tppa = {player[player_id].x + ((triangle_primary_x1  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_primary_y1 - player_ancor_y};
             Vector2 tppb = {player[player_id].x + ((triangle_primary_x2  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_primary_y2 - player_ancor_y};
             Vector2 tppc = {player[player_id].x + ((triangle_primary_x3  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_primary_y3 - player_ancor_y};
@@ -105,9 +106,16 @@ void PlayerDraw(player_t player_id)
             Vector2 tfpa = {player[player_id].x + ((triangle_fourth_x1  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_fourth_y1 - player_ancor_y};
             Vector2 tfpb = {player[player_id].x + ((triangle_fourth_x2  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_fourth_y2 - player_ancor_y};
             Vector2 tfpc = {player[player_id].x + ((triangle_fourth_x3  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_fourth_y3 - player_ancor_y};
+            
+            /// Circle Eye Point
+            Vector2 cep = {player[player_id].x + ((circle_eye_x  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + circle_eye_y - player_ancor_y};
+            
+            /// Square Head Point|Size
+            Vector2 shp = {player[player_id].x + ((square_head_x  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + square_head_y - player_ancor_y};
+            Vector2 shs = {4, 6};
 
-            // force clock-wise triangle
-            if (player[player_id].sign == SIDE_LEFT){
+            // force clock-wise triangle | fix rectangle pos
+            if (player[player_id].sign == SIDE_LEFT) {
                 // triangle primary
                 aux_v = tppb;
                 tppb = tppc;
@@ -120,11 +128,15 @@ void PlayerDraw(player_t player_id)
                 aux_v = ttpb;
                 ttpb = ttpc;
                 ttpc = aux_v;
-            }
+                // triangle fourth
+                aux_v = tfpb;
+                tfpb = tfpc;
+                tfpc = aux_v;
 
-            /// Square Head Point|Size
-            Vector2 shp = {player[player_id].x + ((square_head_x  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + square_head_y - player_ancor_y};
-            Vector2 shs = {4, 6};
+                //-----------------------------------//
+                // rectangle pos
+                shp.x -= shs.x;
+            }
 
             /// Render In Shape
             DrawTriangle(tppa, tppb, tppc, color_inshape);
@@ -138,6 +150,7 @@ void PlayerDraw(player_t player_id)
             DrawTriangleLines(ttpa, ttpb, ttpc, color_outline);
             DrawTriangleLines(tfpa, tfpb, tfpc, color_outline);
             DrawRectangleLines(shp.x, shp.y, shs.x, shs.y, color_outline);
+            DrawCircleV(cep, 1, BLACK);
             break;
         }
     }
