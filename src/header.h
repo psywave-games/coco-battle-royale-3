@@ -18,7 +18,19 @@
 #define SIDE_LEFT                       false
 #define SIDE_RIGHT                      true
 
+#if MAX_PLAYERS < 2
+typedef bool player_t;
+#endif
+#if MAX_PLAYERS >= 2 and MAX_PLAYERS < 256
 typedef unsigned char player_t;
+#endif
+#if MAX_PLAYER >= 256 and MAX_PLAYERS < 65536
+typedef unsigned int player_t;
+#endif
+#if MAX_PLAYERS >= 65536 and MAX_PLAYERS < 4294967296
+typedef unsigned long player_t;
+#endif
+
 typedef unsigned char state_t;
 typedef signed char axis_i_t;
 typedef bool axis_b_t;
