@@ -23,7 +23,7 @@ struct player_s {
 
 void PlayerInit(player_t player_id)
 {
-    char player_near;
+    player_t player_near;
     bool near_enemy;
     bool near_player;
 

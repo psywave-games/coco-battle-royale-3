@@ -49,11 +49,11 @@ int main(void)
         // DRAW GAME
         BeginDrawing();
         ClearBackground(BLACK);
-        DrawFPS(10,0);
         for (player_t i = 0; i < MAX_PLAYERS; PlayerDraw(i), i++);
         if (pause){
             DrawText("PAUSED!", 10, 64, 32, WHITE);
         }
+        DrawFPS(10,0);
         EndDrawing();
 
         // END STEP

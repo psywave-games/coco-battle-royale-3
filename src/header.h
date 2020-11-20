@@ -21,13 +21,13 @@
 #if MAX_PLAYERS < 2
 typedef bool player_t;
 #endif
-#if MAX_PLAYERS >= 2 and MAX_PLAYERS < 256
+#if MAX_PLAYERS > 1 && MAX_PLAYERS < 256
 typedef unsigned char player_t;
 #endif
-#if MAX_PLAYER >= 256 and MAX_PLAYERS < 65536
+#if MAX_PLAYERS > 255 && MAX_PLAYERS < 65536
 typedef unsigned int player_t;
 #endif
-#if MAX_PLAYERS >= 65536 and MAX_PLAYERS < 4294967296
+#if MAX_PLAYERS > 65535 && MAX_PLAYERS < 4294967296
 typedef unsigned long player_t;
 #endif
 
