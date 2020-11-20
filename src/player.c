@@ -55,36 +55,36 @@ void PlayerDraw(player_t player_id)
     Vector2 aux_v;
     Color color_outline = player_id? player[player_id].color: WHITE;
     Color color_inshape = player_id? WHITE: player[player_id].color;
-    static signed char player_ancor_x = 16;
-    static signed char player_ancor_y = 12;
-    static signed char triangle_primary_x1 = 10;
-    static signed char triangle_primary_y1 = 8;
-    static signed char triangle_primary_x2 = 10;
-    static signed char triangle_primary_y2 = 23;
-    static signed char triangle_primary_x3 = 25;
-    static signed char triangle_primary_y3 = 8;
-    static signed char triangle_secondary_x1 = 3;
-    static signed char triangle_secondary_y1 = 9;
-    static signed char triangle_secondary_x2 = 8;
-    static signed char triangle_secondary_y2 = 20;
-    static signed char triangle_secondary_x3 = 8;
-    static signed char triangle_secondary_y3 = 9;
-    static signed char triangle_third_x1 = 8;
-    static signed char triangle_third_y1 = 2;
-    static signed char triangle_third_x2 = 3;
-    static signed char triangle_third_y2 = 7;
-    static signed char triangle_third_x3 = 8;
-    static signed char triangle_third_y3 = 7;
-    static signed char triangle_fourth_x1 = 25;
-    static signed char triangle_fourth_y1 = 4;
-    static signed char triangle_fourth_x2 = 25;
-    static signed char triangle_fourth_y2 = 5;
-    static signed char triangle_fourth_x3 = 28;
-    static signed char triangle_fourth_y3 = 4;
-    static signed char square_head_x = 21;
+    static signed char player_ancor_x = 32;
+    static signed char player_ancor_y = 24;
+    static signed char triangle_primary_x1 = 20;
+    static signed char triangle_primary_y1 = 16;
+    static signed char triangle_primary_x2 = 20;
+    static signed char triangle_primary_y2 = 46;
+    static signed char triangle_primary_x3 = 50;
+    static signed char triangle_primary_y3 = 16;
+    static signed char triangle_secondary_x1 = 6;
+    static signed char triangle_secondary_y1 = 18;
+    static signed char triangle_secondary_x2 = 16;
+    static signed char triangle_secondary_y2 = 40;
+    static signed char triangle_secondary_x3 = 16;
+    static signed char triangle_secondary_y3 = 18;
+    static signed char triangle_third_x1 = 16;
+    static signed char triangle_third_y1 = 4;
+    static signed char triangle_third_x2 = 6;
+    static signed char triangle_third_y2 = 14;
+    static signed char triangle_third_x3 = 16;
+    static signed char triangle_third_y3 = 14;
+    static signed char triangle_fourth_x1 = 50;
+    static signed char triangle_fourth_y1 = 8;
+    static signed char triangle_fourth_x2 = 50;
+    static signed char triangle_fourth_y2 = 10;
+    static signed char triangle_fourth_x3 = 56;
+    static signed char triangle_fourth_y3 = 8;
+    static signed char square_head_x = 42;
     static signed char square_head_y = 0;
-    static signed char circle_eye_x = 23;
-    static signed char circle_eye_y = 2;
+    static signed char circle_eye_x = 46;
+    static signed char circle_eye_y = 4;
 
     // PLAYER RENDER STATE 
     switch (player[player_id].state) {
@@ -112,7 +112,7 @@ void PlayerDraw(player_t player_id)
             
             /// Square Head Point|Size
             Vector2 shp = {player[player_id].x + ((square_head_x  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + square_head_y - player_ancor_y};
-            Vector2 shs = {4, 6};
+            Vector2 shs = {8, 12};
 
             // force clock-wise triangle | fix rectangle pos
             if (player[player_id].sign == SIDE_LEFT) {
@@ -150,7 +150,7 @@ void PlayerDraw(player_t player_id)
             DrawTriangleLines(ttpa, ttpb, ttpc, color_outline);
             DrawTriangleLines(tfpa, tfpb, tfpc, color_outline);
             DrawRectangleLines(shp.x, shp.y, shs.x, shs.y, color_outline);
-            DrawCircleV(cep, 1, BLACK);
+            DrawCircleV(cep, 2, BLACK);
             break;
         }
     }
@@ -246,7 +246,6 @@ void PlayerMediatorStep(void)
             }
 
             if (PlayerDistance(i, j) < PLAYER_SIZE) {
-                player[i].state = fsm_player_idle;
                 player[j].state = fsm_player_died;
             }
         }
