@@ -1,5 +1,6 @@
 #pragma once
 #define GAME_TITLE                      "Coco Battle Royale 2"
+#define GAME_AWAIT                      (5)
 #define DEFAULT_SCREEN_WIDTH            (800)
 #define DEFAULT_SCREEN_HEIGHT           (600)
 #define MAX_PLAYERS                     (16)
@@ -34,6 +35,9 @@ typedef unsigned long player_t;
 typedef unsigned char state_t;
 typedef signed char axis_i_t;
 typedef bool axis_b_t;
+
+// FILE: main.c
+bool IsGameStarted(void);
 
 // FILE: ia_bot.c
 void BotIaInit(player_t player_id);
