@@ -21,6 +21,8 @@ struct player_s {
     Color color;
 }   player[(player_t) MAX_PLAYERS];
 
+static player_t players_count;
+
 void PlayerInit(player_t player_id)
 {
     player_t player_near;
@@ -28,7 +30,7 @@ void PlayerInit(player_t player_id)
     bool near_player;
 
     player[player_id].state = fsm_player_idle;  
-    player[player_id].color = (Color) {irand(255), irand(255), irand(255), 255};
+    player[player_id].color = RANDOM_COLOR;
     player[player_id].hspeed = 0.0f;
     player[player_id].vspeed = 0.0f; 
 
@@ -85,6 +87,11 @@ void PlayerDraw(player_t player_id)
     static signed char square_head_y = 0;
     static signed char circle_eye_x = 46;
     static signed char circle_eye_y = 4;
+
+    // PLAYER RAINBOW WINNER COLOR
+    if (PlayerCount() <= 1){
+        player[player_id].color = RANDOM_COLOR;
+    }
 
     // PLAYER RENDER STATE 
     switch (player[player_id].state) {
@@ -261,4 +268,19 @@ Vector2 PlayerPos(player_t player_id)
 {
     Vector2 pos = {player[player_id].x, player[player_id].y};
     return pos;
+}
+
+player_t PlayerCount()
+{
+    return players_count;
+}
+
+void PlayerCountStep()
+{
+    players_count = 0;
+
+    for (
+        player_t i = 0; i < PLAYER_SIZE;
+        players_count += (player_t) (player[i].state != fsm_player_died), i++
+    );
 }

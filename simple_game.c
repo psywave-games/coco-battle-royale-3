@@ -16,7 +16,6 @@
 #include "src/player.c"
 #include "src/ia_bot.c"
 
-static player_t score_position;
 static time_t game_time_init; 
 static bool game_started;
 
@@ -48,11 +47,12 @@ int main(void)
         // PRE-STEP GAME
         InputStep();
         PlayerMediatorStep();
-        BotIaStep();
+        PlayerCountStep();
 
         // STEP GAME
         if (!pause && IsGameStarted()) {
             for (player_t i = 0; i < MAX_PLAYERS; PlayerStep(i), i++);
+            for (player_t i = 0; i < MAX_PLAYERS; BotIaStep(i), i++);
         }
 
         // -------------------------------------------------------- //

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <raylib.h>
 #include <raymath.h>
 #include <time.h>
@@ -25,67 +26,99 @@ void BotIaInit(player_t player_id)
     BotIaChange(player_id);
 }
 
-void BotIaStep(void)
+void BotIaStep(player_t player_id)
 {
-    for (player_t player_id = 0; player_id < MAX_PLAYERS; player_id++)
-    {
-        if (PlayerDeath(player_id)){
-            bot[player_id].state = fsm_ia_none;
-        }
+    if (PlayerDeath(player_id)){
+        bot[player_id].state = fsm_ia_none;
+        return;
+    }
 
-        switch (bot[player_id].state) {
-            case fsm_ia_sleep:
-                if (GetRandomValue(0, 25) == 0){
-                    BotIaChange(player_id);
-                } else {
-                    bot[player_id].input_x = 0;
+    if (PlayerCount() <= 1) {
+        bot[player_id].state = fsm_ia_winner;
+        bot[player_id].attack = false;
+    }
+
+    switch (bot[player_id].state) {
+        case fsm_ia_winner:
+            // ADJUST VERTICAL|HORIZONTAL
+            {
+                Vector2 pos = PlayerPos(player_id);
+                int dis_middle = (DEFAULT_SCREEN_HEIGHT/2) - ((int) pos.y);
+                int dis_center = (DEFAULT_SCREEN_WIDTH/2) - ((int) pos.x);
+
+                // VERTICAL INPUT
+                if (abs(dis_middle) > 5 && dis_middle < 0) {
+                    bot[player_id].input_y = -1;
+                } 
+                else if (abs(dis_middle) > 5 && dis_middle > 0) {
+                    bot[player_id].input_y = 1;
+                }
+                else {
                     bot[player_id].input_y = 0;
-                }  
-                break;
+                }
 
-            case fsm_ia_random:
-                if (GetRandomValue(0, 100) == 0) {
-                    bot[player_id].input_x = GetRandomValue(-1, 1);
-                    bot[player_id].input_y = GetRandomValue(-1, 1);
+                // HORIZONTAL INPUT
+                if (abs(dis_center) > (DEFAULT_SCREEN_WIDTH/4) && dis_center < 0) {
+                    bot[player_id].input_x = -1;
                 } 
-                else if (GetRandomValue(0, 50) == 0){
-                    BotIaChange(player_id);
-                }  
-                break;
+                else if (abs(dis_center) > (DEFAULT_SCREEN_WIDTH/4) && dis_center > 0) {
+                    bot[player_id].input_x = 1;
+                }
+            }
+            break;
 
-            case fsm_ia_hunter:
-                if (PlayerDeath(bot[player_id].target)) {
-                    BotIaRetarget(player_id);
-                }
-                else if (PlayerDistance(bot[player_id].target, player_id) < PLAYER_SIZE) {
-                    bot[player_id].attack = GetRandomValue(0, 3) == 0;
-                }
-                else if (GetRandomValue(0, 15) == 0 && PlayerDistance(bot[player_id].target, player_id) > (PLAYER_SIZE * 5)) {
-                    BotIaChange(player_id);
-                } 
-                else {
-                    Vector2 player_hunter_pos = PlayerPos(player_id);
-                    Vector2 player_escape_pos = PlayerPos(bot[player_id].target);
-                    bot[player_id].input_x = player_hunter_pos.x < player_escape_pos.x? 1: -1;
-                    bot[player_id].input_y = player_hunter_pos.y < player_escape_pos.y? 1: -1;
-                }
-                break;  
 
-            case fsm_ia_escape:
-                if (PlayerDistance(bot[player_id].target, player_id) > (PLAYER_SIZE * 5)) {
-                    BotIaChange(player_id);
-                }
-                else if (GetRandomValue(0, 10) == 0) {
-                    BotIaRetarget(player_id);
-                } 
-                else {
-                    Vector2 player_hunter_pos = PlayerPos(bot[player_id].target);
-                    Vector2 player_escape_pos = PlayerPos(player_id);
-                    bot[player_id].input_x = player_hunter_pos.x < player_escape_pos.x? 1: -1;
-                    bot[player_id].input_y = player_hunter_pos.y < player_escape_pos.y? 1: -1;
-                }
-                break;    
-        }
+        case fsm_ia_sleep:
+            if (GetRandomValue(0, 25) == 0){
+                BotIaChange(player_id);
+            } else {
+                bot[player_id].input_x = 0;
+                bot[player_id].input_y = 0;
+            }  
+            break;
+
+        case fsm_ia_random:
+            if (GetRandomValue(0, 100) == 0) {
+                bot[player_id].input_x = GetRandomValue(-1, 1);
+                bot[player_id].input_y = GetRandomValue(-1, 1);
+            } 
+            else if (GetRandomValue(0, 50) == 0){
+                BotIaChange(player_id);
+            }  
+            break;
+
+        case fsm_ia_hunter:
+            if (PlayerDeath(bot[player_id].target)) {
+                BotIaRetarget(player_id);
+            }
+            else if (PlayerDistance(bot[player_id].target, player_id) < PLAYER_SIZE) {
+                bot[player_id].attack = GetRandomValue(0, 3) == 0;
+            }
+            else if (GetRandomValue(0, 15) == 0 && PlayerDistance(bot[player_id].target, player_id) > (PLAYER_SIZE * 5)) {
+                BotIaChange(player_id);
+            } 
+            else {
+                Vector2 player_hunter_pos = PlayerPos(player_id);
+                Vector2 player_escape_pos = PlayerPos(bot[player_id].target);
+                bot[player_id].input_x = player_hunter_pos.x < player_escape_pos.x? 1: -1;
+                bot[player_id].input_y = player_hunter_pos.y < player_escape_pos.y? 1: -1;
+            }
+            break;  
+
+        case fsm_ia_escape:
+            if (PlayerDistance(bot[player_id].target, player_id) > (PLAYER_SIZE * 5)) {
+                BotIaChange(player_id);
+            }
+            else if (GetRandomValue(0, 10) == 0) {
+                BotIaRetarget(player_id);
+            } 
+            else {
+                Vector2 player_hunter_pos = PlayerPos(bot[player_id].target);
+                Vector2 player_escape_pos = PlayerPos(player_id);
+                bot[player_id].input_x = player_hunter_pos.x < player_escape_pos.x? 1: -1;
+                bot[player_id].input_y = player_hunter_pos.y < player_escape_pos.y? 1: -1;
+            }
+            break;    
     }
 }
 
