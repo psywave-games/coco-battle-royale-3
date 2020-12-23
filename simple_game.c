@@ -18,6 +18,7 @@
 
 static time_t game_time_init; 
 static bool game_started;
+static player_t game_rank;
 
 int main(void)
 {
@@ -55,6 +56,11 @@ int main(void)
             for (player_t i = 0; i < MAX_PLAYERS; BotIaStep(i), i++);
         }
 
+        // PLAYER SCORE
+        if (!PlayerDeath(0)) {
+            game_rank = PlayerCount();
+        }
+
         // -------------------------------------------------------- //
         BeginDrawing();
         ClearBackground(BLACK);
@@ -76,6 +82,15 @@ int main(void)
             const char* text = TextFormat("starting at %02d...", game_time_init + GAME_AWAIT - UNIX_TIME);
             DrawText(text, screenWidth/2, screenHeight/2, 32, WHITE);
         }
+
+        // draw game over
+        if (PlayerCount() <= 1){
+            const char* text = PlayerDeath(0)? 
+                TextFormat("#%02d\nYou were fried.", game_rank):
+                "#1\nYou Are\nUltimate\nHot Chicken!!";
+
+            DrawText(text, screenWidth/2, screenHeight/2, 32, WHITE);
+        } 
         
         EndDrawing();
         // -------------------------------------------------------- //
