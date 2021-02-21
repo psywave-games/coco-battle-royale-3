@@ -22,7 +22,7 @@ int main(void)
     const int screenHeight = DEFAULT_SCREEN_HEIGHT;
 
     InitWindow(screenWidth, screenHeight, GAME_TITLE);
-    SetTargetFPS(120);            
+    SetTargetFPS(60);            
 
     while (!WindowShouldClose()) 
     {

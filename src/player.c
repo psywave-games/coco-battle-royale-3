@@ -12,7 +12,7 @@ struct player_s {
     float y;
     float hspeed;
     float vspeed;
-    axis_b_t sign;
+    Axis sign;
     state_t state;
     time_t last_attack;
     Color color;
@@ -31,6 +31,7 @@ void PlayerInit(player_t player_id)
     player[player_id].hspeed = 0.0f;
     player[player_id].vspeed = 0.0f; 
 
+    // PLAYER CONFIG
     if (player_id == 0) {
         player[player_id].sign = SIDE_RIGHT;
         player[player_id].x = (DEFAULT_SCREEN_WIDTH/2) - (PLAYER_SIZE/2);
@@ -38,7 +39,9 @@ void PlayerInit(player_t player_id)
         return;
     }
 
+    // BOT CONFIG
     do {
+        player[player_id].sign = SIDE_RANDOM;
         player[player_id].x = irand(WORD_LIMIT_X);
 		player[player_id].y = irand(WORD_LIMIT_Y);
 
@@ -82,7 +85,7 @@ void PlayerDraw(player_t player_id)
     static signed char triangle_fourth_y3 = 8;
     static signed char square_head_x = 42;
     static signed char square_head_y = 0;
-    static signed char circle_eye_x = 46;
+    static signed char circle_eye_x = 47;
     static signed char circle_eye_y = 4;
 
     // PLAYER RAINBOW WINNER COLOR
@@ -98,24 +101,24 @@ void PlayerDraw(player_t player_id)
         case fsm_player_walk:
         case fsm_player_idle: {
             // Triangle Primary|Seecondary|Third|Fourth Point A|B|C
-            Vector2 tppa = {player[player_id].x + ((triangle_primary_x1  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_primary_y1 - player_ancor_y};
-            Vector2 tppb = {player[player_id].x + ((triangle_primary_x2  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_primary_y2 - player_ancor_y};
-            Vector2 tppc = {player[player_id].x + ((triangle_primary_x3  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_primary_y3 - player_ancor_y};
-            Vector2 tspa = {player[player_id].x + ((triangle_secondary_x1  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_secondary_y1 - player_ancor_y};
-            Vector2 tspb = {player[player_id].x + ((triangle_secondary_x2  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_secondary_y2 - player_ancor_y};
-            Vector2 tspc = {player[player_id].x + ((triangle_secondary_x3  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_secondary_y3 - player_ancor_y};
-            Vector2 ttpa = {player[player_id].x + ((triangle_third_x1  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_third_y1 - player_ancor_y};
-            Vector2 ttpb = {player[player_id].x + ((triangle_third_x2  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_third_y2 - player_ancor_y};
-            Vector2 ttpc = {player[player_id].x + ((triangle_third_x3  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_third_y3 - player_ancor_y};
-            Vector2 tfpa = {player[player_id].x + ((triangle_fourth_x1  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_fourth_y1 - player_ancor_y};
-            Vector2 tfpb = {player[player_id].x + ((triangle_fourth_x2  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_fourth_y2 - player_ancor_y};
-            Vector2 tfpc = {player[player_id].x + ((triangle_fourth_x3  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + triangle_fourth_y3 - player_ancor_y};
+            Vector2 tppa = {player[player_id].x + ((triangle_primary_x1  - player_ancor_x) * player[player_id].sign), player[player_id].y + triangle_primary_y1 - player_ancor_y};
+            Vector2 tppb = {player[player_id].x + ((triangle_primary_x2  - player_ancor_x) * player[player_id].sign), player[player_id].y + triangle_primary_y2 - player_ancor_y};
+            Vector2 tppc = {player[player_id].x + ((triangle_primary_x3  - player_ancor_x) * player[player_id].sign), player[player_id].y + triangle_primary_y3 - player_ancor_y};
+            Vector2 tspa = {player[player_id].x + ((triangle_secondary_x1  - player_ancor_x) * player[player_id].sign), player[player_id].y + triangle_secondary_y1 - player_ancor_y};
+            Vector2 tspb = {player[player_id].x + ((triangle_secondary_x2  - player_ancor_x) * player[player_id].sign), player[player_id].y + triangle_secondary_y2 - player_ancor_y};
+            Vector2 tspc = {player[player_id].x + ((triangle_secondary_x3  - player_ancor_x) * player[player_id].sign), player[player_id].y + triangle_secondary_y3 - player_ancor_y};
+            Vector2 ttpa = {player[player_id].x + ((triangle_third_x1  - player_ancor_x) * player[player_id].sign), player[player_id].y + triangle_third_y1 - player_ancor_y};
+            Vector2 ttpb = {player[player_id].x + ((triangle_third_x2  - player_ancor_x) * player[player_id].sign), player[player_id].y + triangle_third_y2 - player_ancor_y};
+            Vector2 ttpc = {player[player_id].x + ((triangle_third_x3  - player_ancor_x) * player[player_id].sign), player[player_id].y + triangle_third_y3 - player_ancor_y};
+            Vector2 tfpa = {player[player_id].x + ((triangle_fourth_x1  - player_ancor_x) * player[player_id].sign), player[player_id].y + triangle_fourth_y1 - player_ancor_y};
+            Vector2 tfpb = {player[player_id].x + ((triangle_fourth_x2  - player_ancor_x) * player[player_id].sign), player[player_id].y + triangle_fourth_y2 - player_ancor_y};
+            Vector2 tfpc = {player[player_id].x + ((triangle_fourth_x3  - player_ancor_x) * player[player_id].sign), player[player_id].y + triangle_fourth_y3 - player_ancor_y};
             
             /// Circle Eye Point
-            Vector2 cep = {player[player_id].x + ((circle_eye_x  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + circle_eye_y - player_ancor_y};
+            Vector2 cep = {player[player_id].x + ((circle_eye_x  - player_ancor_x) * player[player_id].sign), player[player_id].y + circle_eye_y - player_ancor_y};
             
             /// Square Head Point|Size
-            Vector2 shp = {player[player_id].x + ((square_head_x  - player_ancor_x) * BOOL_SIGN(player[player_id].sign)), player[player_id].y + square_head_y - player_ancor_y};
+            Vector2 shp = {player[player_id].x + ((square_head_x  - player_ancor_x) * player[player_id].sign), player[player_id].y + square_head_y - player_ancor_y};
             Vector2 shs = {8, 12};
 
             // force clock-wise triangle | fix rectangle pos
@@ -153,8 +156,8 @@ void PlayerDraw(player_t player_id)
             DrawTriangleLines(tspa, tspb, tspc, color_outline);
             DrawTriangleLines(ttpa, ttpb, ttpc, color_outline);
             DrawTriangleLines(tfpa, tfpb, tfpc, color_outline);
-            DrawRectangleLines(shp.x, shp.y, shs.x, shs.y, color_outline);
-            DrawCircleV(cep, 2, BLACK);
+            DrawRectangleLines(shp.x, shp.y, shs.x + 1, shs.y + 1, color_outline);
+            DrawCircleV(cep, 1, DARKGRAY);
             break;
         }
     }
@@ -188,8 +191,8 @@ void PlayerStep(player_t player_id)
         player[player_id].state = fsm_player_atck;
     }
     else if (axis_x != 0 || axis_y != 0) {
+        player[player_id].sign = axis_x != 0? axis_x: player[player_id].sign;
         player[player_id].state = fsm_player_walk;
-        player[player_id].sign = axis_x > 0;
     }
     else {
         player[player_id].state = fsm_player_idle;
@@ -199,8 +202,8 @@ void PlayerStep(player_t player_id)
     if (player[player_id].state == fsm_player_walk) {
         player[player_id].hspeed = Lerp(player[player_id].hspeed, PLAYER_MAX_SPEED * axis_x, PLAYER_INC_SPEED);
         player[player_id].vspeed = Lerp(player[player_id].vspeed, PLAYER_MAX_SPEED * axis_y, PLAYER_INC_SPEED);
-        player[player_id].x = Clamp(player[player_id].x + (player[player_id].hspeed * GetFrameTime()), 0, WORD_LIMIT_X);
-        player[player_id].y = Clamp(player[player_id].y + (player[player_id].vspeed * GetFrameTime()), 0, WORD_LIMIT_Y);
+        player[player_id].x = Clamp(player[player_id].x + (player[player_id].hspeed * GetFrameTime()), PLAYER_SIZE/2, WORD_LIMIT_X + (PLAYER_SIZE/2));
+        player[player_id].y = Clamp(player[player_id].y + (player[player_id].vspeed * GetFrameTime()), PLAYER_SIZE/2, WORD_LIMIT_Y + (PLAYER_SIZE/2));
     }
 }
 

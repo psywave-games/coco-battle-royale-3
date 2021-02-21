@@ -17,16 +17,16 @@
 #define PLAYER_ANY                      (-1)
 #define PLAYER_AWAY                     (2)
 #define PLAYER_SIZE                     (48)
-#define PLAYER_MAX_SPEED                (650)
-#define PLAYER_INC_SPEED                (0.96)
+#define PLAYER_MAX_SPEED                (480)
+#define PLAYER_INC_SPEED                (0.24)
 #define WORD_LIMIT_X                    (DEFAULT_SCREEN_WIDTH-PLAYER_SIZE-1)
 #define WORD_LIMIT_Y                    (DEFAULT_SCREEN_HEIGHT-PLAYER_SIZE-1)
 #define irand(limit)                    GetRandomValue(0,limit)
 #define PointDistance2D(x1,y1,x2,y2)    sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)))
-#define BOOL_SIGN(sign)                 (sign?1:-1) 
 #define UNIX_TIME                       time(NULL)
-#define SIDE_LEFT                       false
-#define SIDE_RIGHT                      true
+#define SIDE_RANDOM                     (GetRandomValue(0,1)?-1:1)
+#define SIDE_LEFT                       -1
+#define SIDE_RIGHT                      1
 
 #if MAX_PLAYERS < 2
 typedef bool player_t;
@@ -43,7 +43,7 @@ typedef unsigned long player_t;
 
 typedef unsigned char state_t;
 typedef signed char axis_i_t;
-typedef bool axis_b_t;
+typedef signed char Axis;
 typedef unsigned char ColorId;
 
 // FILE: main.c
