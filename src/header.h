@@ -1,4 +1,13 @@
 #pragma once
+
+#include <stdlib.h>
+#include <raylib.h>
+#include <raymath.h>
+#include <raymath.h>
+#include <time.h>
+#include <time.h>
+
+
 #define GAME_TITLE                      "Coco Battle Royale 2"
 #define GAME_AWAIT                      (5)
 #define DEFAULT_SCREEN_WIDTH            (800)
@@ -14,7 +23,6 @@
 #define WORD_LIMIT_Y                    (DEFAULT_SCREEN_HEIGHT-PLAYER_SIZE-1)
 #define irand(limit)                    GetRandomValue(0,limit)
 #define PointDistance2D(x1,y1,x2,y2)    sqrt(((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1)))
-#define RANDOM_COLOR                    ((Color) {irand(255), irand(255), irand(255), 255})
 #define BOOL_SIGN(sign)                 (sign?1:-1) 
 #define UNIX_TIME                       time(NULL)
 #define SIDE_LEFT                       false
@@ -36,9 +44,15 @@ typedef unsigned long player_t;
 typedef unsigned char state_t;
 typedef signed char axis_i_t;
 typedef bool axis_b_t;
+typedef unsigned char ColorId;
 
 // FILE: main.c
 bool IsGameStarted(void);
+
+// FILE: color.c
+Color ColorPlayer(void);
+Color ColorBackgroundId(bool reset);
+Color ColorGet(ColorId color_id);
 
 // FILE: ia_bot.c
 void BotIaInit(player_t player_id);

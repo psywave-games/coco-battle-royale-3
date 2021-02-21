@@ -7,11 +7,7 @@
 *
 ********************************************************************************************/
 
-#include <time.h> 
-#include <raylib.h>
-#include <stdbool.h>
-
-#include "src/header.h"
+#include "src/color.c"
 #include "src/input.c"
 #include "src/player.c"
 #include "src/ia_bot.c"
@@ -26,7 +22,7 @@ int main(void)
     const int screenHeight = DEFAULT_SCREEN_HEIGHT;
 
     InitWindow(screenWidth, screenHeight, GAME_TITLE);
-    SetTargetFPS(1000);            
+    SetTargetFPS(120);            
 
     while (!WindowShouldClose()) 
     {
@@ -37,6 +33,7 @@ int main(void)
         
         // RESET GAME
         if (reset) {
+            ColorBackground(true);
             for (player_t i = 0; i < MAX_PLAYERS; PlayerInit(i), i++);
             for (player_t i = 1; i < MAX_PLAYERS; BotIaInit(i), i++);
             game_time_init = UNIX_TIME;
@@ -63,7 +60,7 @@ int main(void)
 
         // -------------------------------------------------------- //
         BeginDrawing();
-        ClearBackground(BLACK);
+        ClearBackground(ColorBackground(false));
         // players draw
         for (
             player_t i = 0, j = IsGameStarted()? MAX_PLAYERS: 1;
@@ -71,7 +68,7 @@ int main(void)
         );
         // draw text pause
         if (pause){
-            DrawText("PAUSED!", 10, 64, 32, WHITE);
+            DrawText("PAUSED!", 10, 64, 32, LIGHTGRAY);
         }
         // draw text fp
         if (fps) {
@@ -80,7 +77,7 @@ int main(void)
         // draw wait time
         if (!IsGameStarted()){
             const char* text = TextFormat("starting at %02d...", game_time_init + GAME_AWAIT - UNIX_TIME);
-            DrawText(text, screenWidth/2, screenHeight/2, 32, WHITE);
+            DrawText(text, screenWidth/2, screenHeight/2, 32, LIGHTGRAY);
         }
 
         // draw game over
@@ -89,7 +86,7 @@ int main(void)
                 TextFormat("#%02d\nYou were fried.", game_rank):
                 "#1\nYou Are\nUltimate\nHot Chicken!!";
 
-            DrawText(text, screenWidth/2, screenHeight/2, 32, WHITE);
+            DrawText(text, screenWidth/2, screenHeight/2, 32, LIGHTGRAY);
         } 
         
         EndDrawing();

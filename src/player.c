@@ -1,6 +1,3 @@
-#include <raylib.h>
-#include <raymath.h>
-#include <time.h>
 #include "header.h"
 
 enum {
@@ -30,7 +27,7 @@ void PlayerInit(player_t player_id)
     bool near_player;
 
     player[player_id].state = fsm_player_idle;  
-    player[player_id].color = RANDOM_COLOR;
+    player[player_id].color = ColorPlayer();
     player[player_id].hspeed = 0.0f;
     player[player_id].vspeed = 0.0f; 
 
@@ -90,7 +87,7 @@ void PlayerDraw(player_t player_id)
 
     // PLAYER RAINBOW WINNER COLOR
     if (PlayerCount() <= 1){
-        player[player_id].color = RANDOM_COLOR;
+        player[player_id].color = ColorPlayer();
     }
 
     // PLAYER RENDER STATE 

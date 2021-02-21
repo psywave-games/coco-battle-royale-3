@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <raylib.h>
-#include <raymath.h>
-#include <time.h>
 #include "header.h"
 
 enum {

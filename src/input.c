@@ -1,5 +1,3 @@
-#include <raylib.h>
-#include <stdbool.h>
 #include "header.h"
 
 static signed char new_axis_x = 0;
