@@ -12,8 +12,7 @@
 #include "src/player.c"
 #include "src/ia_bot.c"
 
-static time_t game_time_init; 
-static bool game_started;
+static Tick game_tickets;
 static player_t game_rank;
 
 int main(void)
@@ -22,7 +21,7 @@ int main(void)
     const int screenHeight = DEFAULT_SCREEN_HEIGHT;
 
     InitWindow(screenWidth, screenHeight, GAME_TITLE);
-    SetTargetFPS(60);            
+    SetTargetFPS(GAME_FPS);            
 
     while (!WindowShouldClose()) 
     {
@@ -36,8 +35,7 @@ int main(void)
             ColorBackground(true);
             for (player_t i = 0; i < MAX_PLAYERS; PlayerInit(i), i++);
             for (player_t i = 1; i < MAX_PLAYERS; BotIaInit(i), i++);
-            game_time_init = UNIX_TIME;
-            game_started = false;
+            game_tickets = 0;
             pause = false;
             reset = false;
         }
@@ -46,6 +44,7 @@ int main(void)
         InputStep();
         PlayerMediatorStep();
         PlayerCountStep();
+        game_tickets += !pause;
 
         // STEP GAME
         if (!pause && IsGameStarted()) {
@@ -76,7 +75,7 @@ int main(void)
         } 
         // draw wait time
         if (!IsGameStarted()){
-            const char* text = TextFormat("starting at %02d...", game_time_init + GAME_AWAIT - UNIX_TIME);
+            const char* text = TextFormat("starting at %02d...", GAME_AWAIT - (game_tickets/GAME_FPS));
             DrawText(text, screenWidth/2, screenHeight/2, 32, LIGHTGRAY);
         }
 
@@ -104,14 +103,10 @@ int main(void)
 
 bool IsGameStarted()
 {
-    if (game_started) {
-        return true;
-    }
+    return (GAME_FPS * GAME_AWAIT) < game_tickets;
+}
 
-    if (game_time_init + GAME_AWAIT <= UNIX_TIME) {
-        game_started = true;
-        return true;
-    }
-
-    return false;
+Tick GameStep()
+{
+    return game_tickets;
 }

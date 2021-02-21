@@ -4,7 +4,8 @@ enum {
     fsm_player_died,
     fsm_player_idle,
     fsm_player_walk,
-    fsm_player_atck
+    fsm_player_atck,
+    fsm_player_recv
 };
 
 struct player_s {
@@ -14,7 +15,7 @@ struct player_s {
     float vspeed;
     Axis sign;
     state_t state;
-    time_t last_attack;
+    Tick last_attack;
     Color color;
 }   player[(player_t) MAX_PLAYERS];
 
@@ -98,6 +99,7 @@ void PlayerDraw(player_t player_id)
         case fsm_player_atck:
             DrawCircleLines(player[player_id].x, player[player_id].y, PLAYER_SIZE, RED);
 
+        case fsm_player_recv:
         case fsm_player_walk:
         case fsm_player_idle: {
             // Triangle Primary|Seecondary|Third|Fourth Point A|B|C
@@ -183,17 +185,29 @@ void PlayerStep(player_t player_id)
     if (player[player_id].state == fsm_player_died){
         return;
     }
-    else if (attack && player[player_id].last_attack + PLAYER_ATTACK_TIME < UNIX_TIME){
-        player[player_id].last_attack = UNIX_TIME;
+    // INIT ATTACK BEFORE MINIMUM TIME ANTI-COMBO
+    else if (attack && player[player_id].last_attack + PLAYER_COMBO_TIME < GameStep()){
+        player[player_id].last_attack = GameStep();
         player[player_id].state = fsm_player_atck;
     }
-    else if (player[player_id].state == fsm_player_atck && player[player_id].last_attack + PLAYER_ATTACK_TIME > UNIX_TIME) {
+    // ATTACK TIMMING
+    else if (player[player_id].state == fsm_player_atck && player[player_id].last_attack + PLAYER_ATTACK_TIME < GameStep()) {
         player[player_id].state = fsm_player_atck;
     }
+    // ATTACK FINISH
+    else if (player[player_id].state == fsm_player_atck) {
+        player[player_id].state = fsm_player_recv;
+    }
+    // RECOVERY TIMMING
+    else if (player[player_id].state == fsm_player_recv && player[player_id].last_attack + PLAYER_RECOVERY_TIME < GameStep()) {
+        player[player_id].state = fsm_player_recv;
+    }
+    // WALKING
     else if (axis_x != 0 || axis_y != 0) {
         player[player_id].sign = axis_x != 0? axis_x: player[player_id].sign;
         player[player_id].state = fsm_player_walk;
     }
+    // SLEEPING
     else {
         player[player_id].state = fsm_player_idle;
     }
@@ -248,8 +262,21 @@ void PlayerMediatorStep(void)
         
         for (player_t j = 0; j < MAX_PLAYERS; j++) {
 
-            if (player[j].state == fsm_player_atck || player[j].state == fsm_player_died) {
+            if (j == i) {
                 continue;
+            }
+
+            if (player[j].state == fsm_player_died) {
+                continue;
+            }
+
+            if (player[j].state == fsm_player_recv) {
+                continue;
+            }
+
+            if (player[j].state == fsm_player_atck) {
+                player[i].state = fsm_player_recv;
+                player[j].state = fsm_player_recv;
             }
 
             if (PlayerDistance(i, j) < PLAYER_SIZE) {

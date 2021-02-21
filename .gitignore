@@ -7,3 +7,6 @@ Thumbs.db
 
 # MacOSX Files
 .DS_Store
+
+# VSCODE IDE
+.vscode
